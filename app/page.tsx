@@ -291,7 +291,6 @@ export default function Home() {
           {[
             { icon: Layers, label: "Next.js 16", color: "text-foreground" },
             { icon: Code2, label: "TypeScript", color: "text-blue-500" },
-            { icon: Palette, label: "Tailwind v4", color: "text-sky-500" },
             { icon: Package, label: "ShadcnUI", color: "text-foreground" },
             { icon: Zap, label: "Zod", color: "text-amber-500" },
             { icon: CheckCircle2, label: "RHF", color: "text-emerald-500" },
