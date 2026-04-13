@@ -42,6 +42,5 @@ next-env.d.ts
 
 # 개발 도구 및 로그
 .claude/
-.mcp.json
 .playwright-mcp/
 dev.log
