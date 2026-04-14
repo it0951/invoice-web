@@ -41,6 +41,6 @@ yarn-error.log*
 next-env.d.ts
 
 # 개발 도구 및 로그
-.claude/
 .playwright-mcp/
 dev.log
+log/

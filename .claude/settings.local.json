@@ -1,0 +1,106 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(git *)",
+      "Bash(npm run *)",
+      "Bash(npx *)",
+      "Bash(node *)",
+      "Bash(ls *)",
+      "Bash(xxd *)",
+      "Bash(printf *)",
+      "Bash(cp *)",
+      "Bash(mv *)",
+      "Bash(cat *)",
+      "Bash(echo *)",
+      "mcp__playwright",
+      "Read",
+      "mcp__ide__getDiagnostics",
+      "mcp__sequential-thinking",
+      "mcp__shadcn",
+      "mcp__github",
+      "Skill(git-commit)",
+      "Bash(rm \"C:\\\\Users\\\\박천식IT0951\\\\workspace\\\\courses\\\\claude-nextjs-starters\\\\.claude\\\\skills\\\\git-commit\\\\SKILL.md\")",
+      "Bash(rmdir \"C:\\\\Users\\\\박천식IT0951\\\\workspace\\\\courses\\\\claude-nextjs-starters\\\\.claude\\\\skills\\\\git-commit\")",
+      "Bash(rmdir \"C:\\\\Users\\\\박천식IT0951\\\\workspace\\\\courses\\\\claude-nextjs-starters\\\\.claude\\\\skills\")",
+      "Bash(/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -NonInteractive -File \".claude/hooks/notification-hook.ps1\")",
+      "Bash(/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -NonInteractive -File \".claude/hooks/stop-hook.ps1\")",
+      "Bash(/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -NonInteractive -Command ':*)",
+      "Bash(/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe:*)",
+      "Bash(ls -la .claude/)",
+      "Bash(find .claude/ -type f)",
+      "Bash(ls -la .claude/hooks/)",
+      "Bash(ls -la .claude/agents/)"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "playwright",
+    "github"
+  ],
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/post-format.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/post-bash-log.sh"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/subagent-log.sh"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"테스트 훅!\" >> ./hook-test.txt"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -NonInteractive -File \".claude/hooks/notification-hook.ps1\""
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -NonInteractive -File \".claude/hooks/stop-hook.ps1\""
+          }
+        ]
+      }
+    ]
+  }
+}
