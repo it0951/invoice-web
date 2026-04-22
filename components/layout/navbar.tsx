@@ -1,54 +1,50 @@
-"use client"
-
 /**
- * @fileoverview 상단 고정 네비게이션 바 컴포넌트.
+ * @fileoverview 상단 고정 네비게이션 바 (Server Component).
  *
- * 다크/라이트 모드 토글과 모바일 Sheet 메뉴를 포함합니다.
- * md 브레이크포인트 미만에서는 햄버거 메뉴로 전환됩니다.
+ * auth()로 세션을 조회하여 로그인/로그아웃 버튼을 조건부 렌더링합니다.
+ * 클라이언트 상태가 필요한 테마 토글과 모바일 메뉴는 별도 Client Component로 분리합니다.
+ *   - ThemeToggle : components/layout/theme-toggle.tsx
+ *   - MobileMenu  : components/layout/mobile-menu.tsx
  */
 
-import { useState } from "react"
-import Link from "next/link"
-import { useTheme } from "next-themes"
-import { Moon, Sun, Zap, Menu } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet"
-import { Separator } from "@/components/ui/separator"
+import Link from "next/link";
+import { Zap } from "lucide-react";
+import { auth } from "@/lib/auth/config";
+import { signOutAction } from "@/lib/auth/actions";
+import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { MobileMenu } from "@/components/layout/mobile-menu";
 
-/** 네비게이션 링크 목록 — href와 표시 레이블로 구성 */
+/** 데스크탑·모바일 공용 네비게이션 링크 목록 */
 const navLinks = [
   { href: "/", label: "홈" },
-  { href: "#components", label: "컴포넌트" },
-  { href: "#form", label: "폼" },
-  { href: "#feedback", label: "피드백" },
-]
+  { href: "/dashboard", label: "대시보드" },
+];
 
 /**
  * 사이트 상단 고정 네비게이션 바.
  *
- * 로고, 데스크탑 메뉴, 다크모드 토글, 모바일 햄버거 메뉴를 렌더링합니다.
- * `sticky top-0`으로 스크롤 시에도 상단에 고정됩니다.
- *
- * @example
- * ```tsx
- * // app/layout.tsx 에서 사용
- * <Navbar />
- * ```
+ * - 로그인 상태: "로그아웃" 버튼 표시 (Server Action 호출)
+ * - 비로그인 상태: "로그인" 버튼 표시 (/login 링크)
  */
-export function Navbar() {
-  // resolvedTheme: "system" 설정 시 실제 적용된 테마(light/dark)를 반환
-  const { resolvedTheme, setTheme } = useTheme()
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+export async function Navbar() {
+  // 서버에서 세션 조회 — auth()는 Server Component/Action에서만 사용 가능
+  const session = await auth();
+  const isAuthenticated = !!session;
 
-  const toggleTheme = () => {
-    setTheme(resolvedTheme === "dark" ? "light" : "dark")
-  }
+  /** 데스크탑·모바일 공용 인증 영역 */
+  const authNode = isAuthenticated ? (
+    // 로그아웃: form + Server Action 패턴 (Client JS 없이 동작)
+    <form action={signOutAction}>
+      <Button type="submit" variant="outline" size="sm" className="w-full">
+        로그아웃
+      </Button>
+    </form>
+  ) : (
+    <Button asChild variant="outline" size="sm" className="w-full">
+      <Link href="/login">로그인</Link>
+    </Button>
+  );
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-sm">
@@ -74,53 +70,16 @@ export function Navbar() {
 
         {/* 오른쪽 액션 영역 */}
         <div className="flex items-center gap-2">
-          {/* 다크모드 토글 */}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleTheme}
-            aria-label="테마 전환"
-          >
-            <Sun className="size-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-            <Moon className="absolute size-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-          </Button>
+          {/* 다크모드 토글 (Client Component) */}
+          <ThemeToggle />
 
-          {/* 모바일 햄버거 메뉴 — open 상태 직접 제어하여 링크 클릭 시 자동 닫힘 */}
-          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-            <SheetTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="md:hidden"
-                aria-label="메뉴 열기"
-              >
-                <Menu className="size-4" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-64">
-              <SheetHeader>
-                <SheetTitle className="flex items-center gap-2">
-                  <Zap className="size-4 text-primary" />
-                  Next Starter
-                </SheetTitle>
-              </SheetHeader>
-              <Separator className="my-4" />
-              <nav className="flex flex-col gap-1">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </nav>
-            </SheetContent>
-          </Sheet>
+          {/* 데스크탑 인증 버튼 */}
+          <div className="hidden md:block">{authNode}</div>
+
+          {/* 모바일 햄버거 메뉴 (Client Component) — authSlot으로 인증 버튼 전달 */}
+          <MobileMenu navLinks={navLinks} authSlot={authNode} />
         </div>
       </div>
     </header>
-  )
+  );
 }
