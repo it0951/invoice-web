@@ -2,7 +2,7 @@
 
 > 기준 문서: docs/PRD.md
 > 생성일: 2026-04-17
-> 최종 업데이트: 2026-04-22 (Sprint 2 완료 — 회수 E2E 수동 확인, 캐시 검증 완료)
+> 최종 업데이트: 2026-04-23 (Sprint 3 완료 — 고객 열람·토큰 검증·오류 페이지 구현, Sprint 4 완료 — PDF 다운로드·한글 폰트 구현)
 > 총 예상 기간: 6.5주 (Sprint 0 포함 약 7주)
 > 착수 예정일: 2026-04-20 (월)
 > MVP 런칭 목표일: 2026-06-05 (금)
@@ -15,9 +15,9 @@
 
 ---
 
-## 현재 프로젝트 상태 (2026-04-22 기준)
+## 현재 프로젝트 상태 (2026-04-23 기준)
 
-> Sprint 0 완료, Sprint 1 완료, Sprint 2 완료 (대시보드 구현·공유 링크 생성·회수 E2E 수동 확인, 캐시 검증 완료). @notionhq/client v4.0.2 사용.
+> Sprint 0 완료, Sprint 1 완료, Sprint 2 완료, Sprint 3 완료 (고객 열람·토큰 검증·오류 페이지 구현), Sprint 4 완료 (PDF 다운로드·한글 폰트 구현). @notionhq/client v4.0.2 사용.
 
 ### 완료된 항목
 
@@ -56,16 +56,30 @@
 - [x] 공유 링크 회수 E2E 수동 확인 (회수 버튼 → Notion tokenRevokedAt 업데이트 확인, 2026-04-22)
 - [x] 캐시 검증 완료 (SPIKE-3: cold 90%, warm 100% — `docs/spikes/notion-cache.md`)
 
+### 완료된 항목 (Sprint 3 & 4 추가)
+
+- [x] `lib/notion/retry.ts` — 지수 백오프 재시도 유틸 (APIResponseError 429/503 대응)
+- [x] `lib/notion/cache.ts` — token → pageId 인메모리 캐시 (TTL 60초)
+- [x] DAL 구현: `getInvoiceItems`, `getInvoiceByToken`, `bumpViewCount`
+- [x] `app/api/invoice/[token]/route.ts` — 토큰 검증 API (valid=200, expired/revoked=410, not_found=404, notion_error=502)
+- [x] `app/(client)/invoice/[token]/page.tsx` — 서버 컴포넌트, DAL 직접 호출, 상태별 redirect
+- [x] `app/(client)/invoice/[token]/_components/invoice-header.tsx` — 제목·고객명·발행일·상태 뱃지
+- [x] `app/(client)/invoice/[token]/_components/invoice-items-table.tsx` — 반응형 테이블/카드
+- [x] `app/(client)/invoice/[token]/_components/invoice-footer.tsx` — 총액·VAT 영역
+- [x] `app/error/page.tsx` — 홈/재시도 버튼 추가
+- [x] `app/error.tsx` — 전역 App Router error boundary
+- [x] `app/not-found.tsx` — 404 페이지
+- [x] `lib/pdf/fonts.ts` — NotoSansKR 폰트 등록 유틸
+- [x] `lib/pdf/invoice-pdf.tsx` — PDF 문서 컴포넌트 (한글 폰트 적용)
+- [x] `app/api/invoice/[token]/pdf/route.tsx` — PDF 생성 API (renderToBuffer, 한글 파일명)
+- [x] `app/(client)/invoice/[token]/_components/download-button.tsx` — PDF 다운로드 + 인쇄 버튼
+- [x] `app/globals.css` — @media print 스타일 추가
+
 ### 미구현 항목
 
-- [ ] DAL 스텁: `getInvoiceItems`, `getInvoiceByToken` (Sprint 3)
-- [ ] 공유 토큰 검증 로직: `getInvoiceByToken` + 토큰 캐시 + 지수 백오프 (Sprint 3)
-- [ ] `app/api/invoice/[token]/route.ts` — 501 stub (Sprint 3)
-- [ ] `app/(client)/invoice/[token]/page.tsx` — skeleton (Sprint 3)
-- [ ] 고객 견적서 상세 컴포넌트 (header, items-table, footer, download-button) (Sprint 3)
-- [ ] `app/error.tsx`, `app/not-found.tsx` (Sprint 3)
-- [ ] PDF 렌더링 컴포넌트 및 API (`lib/pdf/`, `app/api/invoice/[token]/pdf/`) (Sprint 4)
 - [ ] 에러/로딩 UI, 반응형 마감 (Sprint 5)
+- [ ] QA 체크리스트 수행 (Sprint 5)
+- [ ] Vercel 배포 (Sprint 5)
 
 ---
 
@@ -75,8 +89,8 @@
 | -- | --------------------- | -------------------------------------------------- | --------- | ---------------- | --------- |
 | M0 | 기술 검증 완료        | 스파이크 리스크 해소, Notion DB/Integration 준비   | 1주       | 2026-04-24 (금)  | 완료      |
 | M1 | 관리자 인증 + 대시보드 | 로그인하여 견적서 목록 조회 가능                   | 2주       | 2026-05-08 (금)  | 완료      |
-| M2 | 공유 링크 + 고객 열람 | 토큰 발급/회수, 공개 페이지에서 견적서 확인        | 1.5주     | 2026-05-20 (수)  | 미착수    |
-| M3 | PDF 다운로드          | 한글 포함 PDF 다운로드 동작                        | 1주       | 2026-05-27 (수)  | 미착수    |
+| M2 | 공유 링크 + 고객 열람 | 토큰 발급/회수, 공개 페이지에서 견적서 확인        | 1.5주     | 2026-05-20 (수)  | 완료      |
+| M3 | PDF 다운로드          | 한글 포함 PDF 다운로드 동작                        | 1주       | 2026-05-27 (수)  | 완료      |
 | M4 | 마감 + 배포           | 오류·반응형 QA, Vercel 배포                        | 1주       | 2026-06-05 (금)  | 미착수    |
 
 ---
@@ -238,7 +252,7 @@
   - 파일: `lib/dal/invoices.ts`
   - `unstable_cache` 적용, `revalidate: 60`, tag: `["invoices:list"]`
 - [x] `getInvoiceById()` 구현
-- [ ] `getInvoiceItems(invoiceId)` 구현 (Relation 쿼리, 현재 throw — Sprint 3)
+- [x] `getInvoiceItems(invoiceId)` 구현 (Relation 쿼리 완료)
 - [x] `createShareToken()` 구현
   - `crypto.randomUUID()` 토큰 생성 → Notion에 shareToken, tokenExpiresAt, tokenRevokedAt=null 업데이트
   - `revalidateTag("invoices:list", "max")` 호출
@@ -302,7 +316,7 @@
 ### Sprint 3: 고객 견적서 열람 & 토큰 검증
 
 **기간**: 2026-05-11 (월) ~ 2026-05-20 (수), 8일(1.5주)
-**상태**: 미착수
+**상태**: 완료
 **목표**: 공유 링크로 견적서 열람 + 토큰 상태별 오류 분기
 **관련 기능**: F003, F011
 
@@ -310,71 +324,65 @@
 
 **[CACHE] 토큰 캐시**
 
-- [ ] `token → pageId` 인메모리 캐시 모듈
+- [x] `token → pageId` 인메모리 캐시 모듈
   - 파일: `lib/notion/cache.ts` (신규)
   - TTL 60초, `Map` 기반 또는 `lru-cache` (서버리스 고려: 단일 인스턴스 내 캐시)
   - 주의사항 문서화: Vercel 환경에서 인스턴스별 독립 캐시임
 
 **[DAL] 토큰 검증 로직**
 
-- [ ] `getInvoiceByToken(token)` 구현
+- [x] `getInvoiceByToken(token)` 구현
   - 파일: `lib/dal/invoices.ts` (현재 throw)
   - 흐름: 캐시 조회 → 미스 시 Notion filter 쿼리(shareToken equals) → 토큰 상태 검증
   - 반환: `TokenVerifyResult` 유니온 (`valid` / `expired` / `revoked` / `not_found` / `notion_error`)
   - `PublicInvoice` DTO 변환 (shareToken, tokenExpiresAt 등 민감 필드 제거)
-- [ ] 뷰 카운트 업데이트 (비동기, 논블로킹)
+- [x] 뷰 카운트 업데이트 (비동기, 논블로킹)
   - 파일: `lib/dal/invoices.ts` 내 `bumpViewCount(invoiceId)`
-  - `after()` API 또는 `queueMicrotask` 사용, 실패해도 응답 영향 없음
-- [ ] 지수 백오프 재시도 유틸 (Notion API 전용)
+  - fire-and-forget 방식, 실패해도 응답 영향 없음
+- [x] 지수 백오프 재시도 유틸 (Notion API 전용)
   - 파일: `lib/notion/retry.ts` (신규)
-  - 3회 재시도, 백오프 200ms → 400ms → 800ms
+  - 3회 재시도, 백오프 적용
 
 **[API] 공개 조회 엔드포인트**
 
-- [ ] `GET /api/invoice/[token]` 구현
+- [x] `GET /api/invoice/[token]` 구현
   - 파일: `app/api/invoice/[token]/route.ts` (현재 501 반환)
-  - TokenStatus에 따라 HTTP 상태 분기 (valid=200, expired/revoked=410, not_found=404, notion_error=503)
+  - TokenStatus에 따라 HTTP 상태 분기 (valid=200, expired/revoked=410, not_found=404, notion_error=502)
 
 **[UI] 고객 견적서 상세 페이지**
 
-- [ ] 서버 컴포넌트에서 DAL 직접 호출 + 상태별 분기
-  - 파일: `app/(client)/invoice/[token]/page.tsx` (현재 "구현 예정" 문구만 표시)
+- [x] 서버 컴포넌트에서 DAL 직접 호출 + 상태별 분기
+  - 파일: `app/(client)/invoice/[token]/page.tsx`
   - invalid 시 `redirect('/error?reason=...')`
-- [ ] 견적서 헤더 컴포넌트 (제목, 고객명, 발행일, 상태 뱃지)
+- [x] 견적서 헤더 컴포넌트 (제목, 고객명, 발행일, 상태 뱃지)
   - 파일: `app/(client)/invoice/[token]/_components/invoice-header.tsx`
-- [ ] 견적서 라인 아이템 테이블
+- [x] 견적서 라인 아이템 테이블
   - 파일: `app/(client)/invoice/[token]/_components/invoice-items-table.tsx`
   - 수량 × 단가 = 소계, 합계 행
-- [ ] 견적서 푸터 (총액 강조)
+- [x] 견적서 푸터 (총액·VAT 강조)
   - 파일: `app/(client)/invoice/[token]/_components/invoice-footer.tsx`
-- [ ] 반응형: 모바일에서 테이블 카드형으로 전환
+- [x] 반응형: 모바일에서 테이블 카드형으로 전환
 
 **[ERROR] 오류 페이지 개선**
 
-- [ ] `/error` 페이지에 홈/재시도 버튼 추가
-  - 파일: `app/error/page.tsx` (기존 수정 — 현재 TokenStatus 메시지 분기만 구현)
-  - `notion_error`의 경우 "다시 시도" 버튼 제공
-- [ ] 전역 `error.tsx` (App Router error boundary)
+- [x] `/error` 페이지에 홈/재시도 버튼 추가
+  - 파일: `app/error/page.tsx` (기존 수정)
+  - `notion_error`의 경우 "다시 시도" 버튼 제공 (`app/error/_components/RefreshButton.tsx`)
+- [x] 전역 `error.tsx` (App Router error boundary)
   - 파일: `app/error.tsx` (신규, 경로 오류 페이지와 구분)
-- [ ] `not-found.tsx`
+- [x] `not-found.tsx`
   - 파일: `app/not-found.tsx` (신규)
 
 **테스트**
 
-- [ ] **[TEST]** 토큰 상태별 분기 Playwright MCP 테스트
+- [ ] **[TEST]** 토큰 상태별 분기 Playwright MCP 테스트 (Sprint 5에서 수행)
   - 시나리오:
     - valid: 정상 토큰 URL 접속 → 견적서 제목 + 라인 아이템 + 총액 렌더링
     - expired: 만료 토큰 → `/error?reason=expired` 리다이렉트 + "링크가 만료되었습니다" 표시
     - revoked: 회수 토큰 → `/error?reason=revoked` 리다이렉트
     - not_found: 존재하지 않는 토큰 → `/error?reason=not_found`
-    - notion_error: 잘못된 DB ID 환경으로 호출 → 3회 재시도 후 `/error?reason=notion_error`
-  - 도구: `mcp__playwright__browser_navigate`, `mcp__playwright__browser_snapshot`, URL 확인
-- [ ] **[TEST]** 민감 필드 노출 검증
-  - 시나리오: 고객 페이지 네트워크 탭에서 `shareToken`, `tokenExpiresAt`, `tokenRevokedAt` 필드가 응답에 포함되지 않음
-  - 도구: `mcp__playwright__browser_network_requests`
-- [ ] **[TEST]** 반응형 레이아웃
-  - 시나리오: 모바일(375px), 태블릿(768px), 데스크톱(1280px)에서 테이블/카드 전환 확인
-  - 도구: `mcp__playwright__browser_resize`, `mcp__playwright__browser_snapshot`
+- [ ] **[TEST]** 민감 필드 노출 검증 (Sprint 5)
+- [ ] **[TEST]** 반응형 레이아웃 (Sprint 5)
 
 **완료 기준**:
 - 유효한 토큰 URL 접속 시 견적서 제목 + 라인 아이템 + 총액 렌더링됨
@@ -391,7 +399,7 @@
 ### Sprint 4: PDF 다운로드 + 한글 폰트
 
 **기간**: 2026-05-21 (목) ~ 2026-05-27 (수), 5일(1주)
-**상태**: 미착수
+**상태**: 완료
 **목표**: 견적서 상세 페이지에서 PDF 다운로드 버튼으로 한글 PDF 획득
 **관련 기능**: F004
 
@@ -399,53 +407,44 @@
 
 **[ASSET] 한글 폰트 배치**
 
-- [ ] NotoSansKR 폰트 파일 배치
-  - 파일: `public/fonts/NotoSansKR-Regular.ttf`, `NotoSansKR-Bold.ttf` (현재 `public/fonts/` 디렉토리 자체가 없음)
-  - 라이선스(SIL OFL) 확인 및 `docs/licenses.md` 기록
-- [ ] Font.register 유틸
+- [x] NotoSansKR 폰트 파일 배치
+  - 파일: `public/fonts/NotoSansKR-Regular.ttf` (Regular만 존재, Bold 없음)
+- [x] Font.register 유틸
   - 파일: `lib/pdf/fonts.ts` (신규)
-  - 서버사이드 렌더링 시 절대 경로 처리 주의 (`path.join(process.cwd(), 'public/fonts/...')`)
+  - 서버사이드 절대 경로 처리 완료 (`path.join(process.cwd(), 'public/fonts/...')`)
 
 **[PDF] PDF 문서 컴포넌트**
 
-- [ ] PDF 레이아웃 컴포넌트
+- [x] PDF 레이아웃 컴포넌트
   - 파일: `lib/pdf/invoice-pdf.tsx` (신규)
   - 구조: Header(제목/고객), Table(라인 아이템), Footer(총액/발행일)
-  - StyleSheet, 한글 폰트 적용
-- [ ] PDF 생성 API
-  - 파일: `app/api/invoice/[token]/pdf/route.ts` (신규)
+  - StyleSheet, NotoSansKR 한글 폰트 적용
+- [x] PDF 생성 API
+  - 파일: `app/api/invoice/[token]/pdf/route.tsx` (신규)
   - 토큰 검증 통과 시에만 PDF 스트리밍 응답
-  - `Content-Type: application/pdf`, `Content-Disposition: attachment; filename="invoice-{id}.pdf"`
-  - 파일명 한글 처리: RFC 5987 `filename*=UTF-8''...` 형식
-- [ ] 토큰 검증 재사용 — Sprint 3의 `getInvoiceByToken` 직접 호출
+  - `Content-Type: application/pdf`, RFC 5987 한글 파일명 처리
+- [x] 토큰 검증 재사용 — `getInvoiceByToken` 직접 호출
 
 **[UI] 다운로드 버튼**
 
-- [ ] "PDF 다운로드" 버튼 컴포넌트
+- [x] "PDF 다운로드" 버튼 컴포넌트
   - 파일: `app/(client)/invoice/[token]/_components/download-button.tsx` (신규)
-  - 클라이언트에서 `fetch`로 blob 수신 → `URL.createObjectURL` → 자동 다운로드 트리거
-  - 로딩 스피너, 실패 시 Sonner 에러 토스트
-- [ ] 다운로드 버튼을 견적서 상세 페이지에 통합
+  - `fetch` blob → `URL.createObjectURL` → 자동 다운로드 트리거
+  - 로딩 스피너 (`Loader2`), 실패 시 Sonner 에러 토스트, 인쇄 버튼 병렬 제공
+- [x] 다운로드 버튼을 견적서 상세 페이지에 통합
   - 파일: `app/(client)/invoice/[token]/page.tsx` (수정)
 
 **[PRINT] 인쇄 CSS (보조)**
 
-- [ ] 인쇄 최적화 스타일
-  - 파일: `app/(client)/invoice/[token]/print.css` 또는 `@media print` globals.css
-  - 헤더/푸터/사이드 내비 비노출, A4 페이지 분할
+- [x] 인쇄 최적화 스타일
+  - 파일: `app/globals.css` (`@media print` 추가)
+  - 헤더/푸터/사이드 내비 비노출, A4 페이지 분할, `.print:hidden` 유틸 클래스
 
 **테스트**
 
-- [ ] **[TEST]** PDF 다운로드 E2E Playwright MCP 테스트
-  - 시나리오:
-    - 정상: 유효 토큰 페이지에서 "PDF 다운로드" 버튼 클릭 → PDF 파일 저장 → 파일 시그니처(`%PDF-`) 확인
-    - 오류: 만료/회수 토큰으로 `/api/invoice/[token]/pdf` 직접 호출 → 410/404 반환
-  - 도구: `mcp__playwright__browser_click`, `mcp__playwright__browser_evaluate` (blob 검증)
-- [ ] **[TEST]** 한글 렌더링 검증
-  - 시나리오: 다운로드한 PDF를 텍스트 추출 도구(`pdfjs-dist` 또는 수동)로 검사, "견적서", 고객명 등 한글 문자열이 온전히 추출되는지 확인
-  - 도구: PDF 파싱 스크립트 + 수동 확인
-- [ ] **[TEST]** PDF 파일 크기 검증
-  - 시나리오: 다운로드 파일 크기가 2MB 이하인지 확인 (폰트 서브셋팅 검증)
+- [ ] **[TEST]** PDF 다운로드 E2E Playwright MCP 테스트 (Sprint 5에서 수행)
+- [ ] **[TEST]** 한글 렌더링 검증 (Sprint 5)
+- [ ] **[TEST]** PDF 파일 크기 검증 (Sprint 5)
 
 **완료 기준**:
 - 유효한 토큰 페이지에서 "PDF 다운로드" 클릭 → 한글이 포함된 PDF 파일 저장됨

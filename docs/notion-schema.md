@@ -143,9 +143,41 @@ console.log(JSON.stringify(db.properties, null, 2))
 
 ## 완료 체크리스트
 
-- [ ] Notion Integration 생성 및 `NOTION_API_KEY` 발급
-- [ ] Invoice DB 생성 (11개 속성)
-- [ ] InvoiceItem DB 생성 (5개 속성 + Relation)
-- [ ] 두 DB에 Integration Share 처리
-- [ ] 더미 견적서 3건 + 항목 10개 입력
-- [ ] `NOTION_INVOICE_DB_ID`, `NOTION_ITEM_DB_ID` 확인 및 `.env.local` 기록
+- [x] Notion Integration 생성 및 `NOTION_API_KEY` 발급
+- [x] Invoice DB 생성 (11개 속성)
+- [x] InvoiceItem DB 생성 (5개 속성 + Relation)
+- [x] 두 DB에 Integration Share 처리
+- [x] 더미 견적서 3건 + 항목 10개 입력
+- [x] `NOTION_INVOICE_DB_ID`, `NOTION_ITEM_DB_ID` 확인 및 `.env.local` 기록
+
+---
+
+## 실제 구현 확인 사항
+
+코드 구현 과정에서 확인된 Notion DB 속성 처리 방식입니다. 스키마 설계와 실제 구현 간 차이가 발생할 수 있으므로 반드시 확인하세요.
+
+### InvoiceItem DB — 항목명 속성 실제명
+
+- **실제 속성명**: `title`
+- **Notion 타입**: Title (기본 제목 속성, Aa 아이콘)
+- **코드 처리**: `lib/notion/mappers.ts`의 `toInvoiceItem()`에서 `getText(p, "title")`로 읽음
+- **주의**: Notion에서 기본 제목 속성의 이름을 `name`, `항목명` 등으로 변경하면 빈 문자열로 읽힘. 반드시 `title` 유지
+
+### InvoiceItem DB — subtotal 컬럼 처리
+
+- `subtotal` 속성이 **Rollup(Σ) 또는 Formula 타입**인 경우 `@notionhq/client`의 `getNumber()` 헬퍼가 `0`을 반환함
+- **코드에서 대응**: `quantity × unitPrice`로 클라이언트 측에서 직접 재계산
+  ```ts
+  // lib/notion/mappers.ts — toInvoiceItem()
+  const quantity = getNumber(p, "quantity");
+  const unitPrice = getNumber(p, "unitPrice");
+  subtotal: quantity * unitPrice,  // Rollup 타입 우회를 위해 직접 계산
+  ```
+- Notion에서 `subtotal`을 Number 타입으로 직접 입력해도 코드는 재계산 값을 우선 사용함
+
+### InvoiceItem DB — 기본 제목(Aa) 속성명 주의사항
+
+- Notion이 새 DB를 생성할 때 기본 제목 속성은 `"Name"` 또는 `"이름"`으로 자동 생성됨
+- 이 DB에서는 기본 제목 속성을 **반드시 `id`가 아닌 `title`로 유지**해야 함
+- 만약 기본 제목 속성명을 `id`로 변경한 경우: `getText(p, "title")`이 빈 문자열을 반환하므로 `title`로 원복 필요
+- 속성명 변경 방법: 해당 열 헤더 클릭 → 이름 편집 → `title` 입력
