@@ -128,3 +128,47 @@
     @apply font-sans;
   }
 }
+
+/* 인쇄 / PDF 저장 대체 스타일 */
+@media print {
+  /* 네비게이션, 푸터, 다운로드 버튼 숨김 */
+  nav,
+  footer,
+  .print\:hidden {
+    display: none !important;
+  }
+
+  /* 배경색 유지 */
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* 여백 최소화 */
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  /* 페이지 여백 설정 */
+  @page {
+    margin: 20mm;
+    size: A4;
+  }
+
+  /* 테두리 제거 (견적서 본문) */
+  .print\:border-none {
+    border: none !important;
+  }
+
+  /* 패딩 초기화 (견적서 본문) */
+  .print\:p-0 {
+    padding: 0 !important;
+  }
+
+  /* 상단 여백 초기화 */
+  .print\:py-4 {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+}

@@ -73,12 +73,17 @@ export function toInvoiceItem(page: PageObjectResponse): InvoiceItem {
       ? relationProp.relation[0].id
       : "";
 
+  const quantity = getNumber(p, "quantity");
+  const unitPrice = getNumber(p, "unitPrice");
+
   return {
     id: page.id,
     invoiceId,
-    description: getText(p, "description"),
-    quantity: getNumber(p, "quantity"),
-    unitPrice: getNumber(p, "unitPrice"),
-    subtotal: getNumber(p, "subtotal"),
+    // Notion DB의 항목명 속성명은 "title" (rich_text 타입)
+    description: getText(p, "title"),
+    quantity,
+    unitPrice,
+    // Notion의 subtotal이 Rollup/Formula 타입이면 getNumber가 0을 반환하므로 직접 계산
+    subtotal: quantity * unitPrice,
   };
 }
