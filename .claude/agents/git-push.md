@@ -1,6 +1,6 @@
 ---
 name: "git-push"
-description: "GitHub 원격 저장소(https://github.com/it0951/claude-nextjs-starters)에 변경사항을 push합니다. 다음 상황에서 호출하세요: (1) 커밋 후 원격 저장소에 반영이 필요할 때, (2) 브랜치를 원격에 업로드할 때, (3) PR 생성 전 브랜치를 push할 때."
+description: "GitHub 원격 저장소(https://github.com/it0951/invoice-web)에 변경사항을 push합니다. 다음 상황에서 호출하세요: (1) 커밋 후 원격 저장소에 반영이 필요할 때, (2) 브랜치를 원격에 업로드할 때, (3) PR 생성 전 브랜치를 push할 때."
 model: sonnet
 color: red
 allowed-tools:
@@ -16,13 +16,13 @@ GitHub 원격 저장소에 안전하게 push합니다.
 
 ## 원격 저장소 정보
 
-- **URL**: https://github.com/it0951/claude-nextjs-starters
+- **URL**: https://github.com/it0951/invoice-web
 - **Remote 이름**: origin
 
 ## 프로세스
 
 1. `git remote -v`로 origin 설정 확인
-   - origin이 없으면 `git remote add origin https://github.com/it0951/claude-nextjs-starters.git`으로 추가
+   - origin이 없으면 `git remote add origin https://github.com/it0951/invoice-web.git`으로 추가
    - origin URL이 다르면 `git remote set-url origin`으로 수정
 2. `git status`로 미커밋 변경사항 확인 — 있으면 먼저 커밋하도록 안내
 3. `git log origin/<브랜치>..HEAD` 또는 upstream 미설정 시 로컬 커밋 목록 확인
@@ -43,7 +43,7 @@ GitHub 원격 저장소에 안전하게 push합니다.
 ## Push 완료
 
 - **브랜치**: <브랜치명>
-- **원격**: origin (https://github.com/it0951/claude-nextjs-starters)
+- **원격**: origin (https://github.com/it0951/invoice-web)
 - **push된 커밋**: X개
 - **결과**: 성공 / 실패 사유
 ```
