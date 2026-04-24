@@ -2,7 +2,7 @@
 
 > 기준 문서: docs/PRD.md
 > 생성일: 2026-04-17
-> 최종 업데이트: 2026-04-23 (Sprint 3 완료 — 고객 열람·토큰 검증·오류 페이지 구현, Sprint 4 완료 — PDF 다운로드·한글 폰트 구현)
+> 최종 업데이트: 2026-04-24 (Sprint 5 완료 — QA·보안·접근성·문서 마감, Vercel 배포 대기)
 > 총 예상 기간: 6.5주 (Sprint 0 포함 약 7주)
 > 착수 예정일: 2026-04-20 (월)
 > MVP 런칭 목표일: 2026-06-05 (금)
@@ -15,9 +15,9 @@
 
 ---
 
-## 현재 프로젝트 상태 (2026-04-23 기준)
+## 현재 프로젝트 상태 (2026-04-24 기준)
 
-> Sprint 0 완료, Sprint 1 완료, Sprint 2 완료, Sprint 3 완료 (고객 열람·토큰 검증·오류 페이지 구현), Sprint 4 완료 (PDF 다운로드·한글 폰트 구현). @notionhq/client v4.0.2 사용.
+> Sprint 0~5 구현 완료. Vercel 프로덕션 배포만 남은 상태. @notionhq/client v4.0.2 사용.
 
 ### 완료된 항목
 
@@ -75,11 +75,20 @@
 - [x] `app/(client)/invoice/[token]/_components/download-button.tsx` — PDF 다운로드 + 인쇄 버튼
 - [x] `app/globals.css` — @media print 스타일 추가
 
+### 완료된 항목 (Sprint 5 추가)
+
+- [x] E2E QA 자동화 테스트 (오류 시나리오, 반응형, 다크모드) — Playwright MCP
+- [x] 관리자·고객 플로우 수동 점검 완료 (2026-04-24)
+- [x] 보안 점검: 스파이크 라우트 삭제, 보안 헤더 3종 추가, .gitignore 정리
+- [x] ARIA 접근성 보강 (aria-busy, aria-label)
+- [x] PDF route `renderToStream` try/catch 추가
+- [x] 문서 마감: README, docs/deployment.md, docs/admin-guide.md, docs/qa-checklist.md
+- [x] InvoiceItem 항목명 버그픽스 (`getText(p, "title")`) + subtotal 재계산
+- [x] GitHub push 완료 (Sprint 3·4·5 전체)
+
 ### 미구현 항목
 
-- [ ] 에러/로딩 UI, 반응형 마감 (Sprint 5)
-- [ ] QA 체크리스트 수행 (Sprint 5)
-- [ ] Vercel 배포 (Sprint 5)
+- [ ] Vercel 프로덕션 배포 (사용자 직접 수행 — docs/deployment.md 참조)
 
 ---
 
@@ -91,7 +100,7 @@
 | M1 | 관리자 인증 + 대시보드 | 로그인하여 견적서 목록 조회 가능                   | 2주       | 2026-05-08 (금)  | 완료      |
 | M2 | 공유 링크 + 고객 열람 | 토큰 발급/회수, 공개 페이지에서 견적서 확인        | 1.5주     | 2026-05-20 (수)  | 완료      |
 | M3 | PDF 다운로드          | 한글 포함 PDF 다운로드 동작                        | 1주       | 2026-05-27 (수)  | 완료      |
-| M4 | 마감 + 배포           | 오류·반응형 QA, Vercel 배포                        | 1주       | 2026-06-05 (금)  | 미착수    |
+| M4 | 마감 + 배포           | 오류·반응형 QA, Vercel 배포                        | 1주       | 2026-06-05 (금)  | 진행중    |
 
 ---
 
@@ -459,7 +468,7 @@
 ### Sprint 5: 마감 QA + 배포
 
 **기간**: 2026-05-28 (목) ~ 2026-06-05 (금), 7일(1주)
-**상태**: 미착수
+**상태**: 진행중 (Vercel 배포만 남음)
 **목표**: 전체 기능 QA, 에러·반응형 마감, Vercel 프로덕션 배포
 **관련 기능**: 전체
 
