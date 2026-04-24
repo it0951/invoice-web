@@ -2,10 +2,10 @@
 
 > 기준 문서: docs/PRD.md
 > 생성일: 2026-04-17
-> 최종 업데이트: 2026-04-24 (Sprint 5 완료 — QA·보안·접근성·문서 마감, Vercel 배포 대기)
+> 최종 업데이트: 2026-04-24 (Sprint 0~5 전체 완료 — Vercel 프로덕션 배포 및 테스트 완료)
 > 총 예상 기간: 6.5주 (Sprint 0 포함 약 7주)
 > 착수 예정일: 2026-04-20 (월)
-> MVP 런칭 목표일: 2026-06-05 (금)
+> MVP 런칭 목표일: 2026-06-05 (금) → **2026-04-24 조기 완료**
 
 ---
 
@@ -17,7 +17,7 @@
 
 ## 현재 프로젝트 상태 (2026-04-24 기준)
 
-> Sprint 0~5 구현 완료. Vercel 프로덕션 배포만 남은 상태. @notionhq/client v4.0.2 사용.
+> **MVP 완료.** Sprint 0~5 전체 구현 + Vercel 프로덕션 배포 + 테스트 완료 (2026-04-24). @notionhq/client v4.0.2 사용.
 
 ### 완료된 항목
 
@@ -88,7 +88,7 @@
 
 ### 미구현 항목
 
-- [ ] Vercel 프로덕션 배포 (사용자 직접 수행 — docs/deployment.md 참조)
+~~- [ ] Vercel 프로덕션 배포~~ → **완료 (2026-04-24)**
 
 ---
 
@@ -100,7 +100,7 @@
 | M1 | 관리자 인증 + 대시보드 | 로그인하여 견적서 목록 조회 가능                   | 2주       | 2026-05-08 (금)  | 완료      |
 | M2 | 공유 링크 + 고객 열람 | 토큰 발급/회수, 공개 페이지에서 견적서 확인        | 1.5주     | 2026-05-20 (수)  | 완료      |
 | M3 | PDF 다운로드          | 한글 포함 PDF 다운로드 동작                        | 1주       | 2026-05-27 (수)  | 완료      |
-| M4 | 마감 + 배포           | 오류·반응형 QA, Vercel 배포                        | 1주       | 2026-06-05 (금)  | 진행중    |
+| M4 | 마감 + 배포           | 오류·반응형 QA, Vercel 배포                        | 1주       | 2026-04-24 (금)  | **완료**  |
 
 ---
 
@@ -468,7 +468,7 @@
 ### Sprint 5: 마감 QA + 배포
 
 **기간**: 2026-05-28 (목) ~ 2026-06-05 (금), 7일(1주)
-**상태**: 진행중 (Vercel 배포만 남음)
+**상태**: 완료 (2026-04-24)
 **목표**: 전체 기능 QA, 에러·반응형 마감, Vercel 프로덕션 배포
 **관련 기능**: 전체
 
@@ -476,57 +476,54 @@
 
 **[QA] 시나리오 테스트**
 
-- [ ] 관리자 시나리오 체크리스트 수행
+- [x] 관리자 시나리오 체크리스트 수행 ✅
   - 로그인 → 대시보드 → 공유 링크 생성 → URL 복사 → 새 브라우저에서 열람 → 공유 링크 회수 → 동일 URL 접근 시 오류
-- [ ] 고객 시나리오 체크리스트 수행
+- [x] 고객 시나리오 체크리스트 수행 ✅
   - 공유 URL 접속 → 견적서 확인 → PDF 다운로드 → 한글 확인
-- [ ] 오류 시나리오 체크리스트 수행
+- [x] 오류 시나리오 체크리스트 수행 ✅
   - 만료 토큰, 회수 토큰, 무효 토큰, Notion API 다운(가상)
-- [ ] 결과물: `docs/qa-checklist.md`
+- [x] 결과물: `docs/qa-checklist.md`
 
 **[UX] 반응형 & 접근성 마감**
 
-- [ ] 모바일(375px), 태블릿(768px), 데스크톱(1280px) 레이아웃 점검
-- [ ] 다크모드 전체 페이지 확인
-- [ ] 키보드 탐색(Tab), 포커스 아웃라인 확인
-- [ ] ARIA 속성 보강 (`aria-label`, `aria-live` 등)
-- [ ] Lighthouse 점수 측정 (Performance/Accessibility 90+ 목표)
+- [x] 모바일(375px), 태블릿(768px), 데스크톱(1280px) 레이아웃 점검
+- [x] 다크모드 전체 페이지 확인
+- [x] 키보드 탐색(Tab), 포커스 아웃라인 확인
+- [x] ARIA 속성 보강 (`aria-label`, `aria-live` 등)
+- [x] Lighthouse 점수 측정 (Performance/Accessibility 90+ 목표)
 
 **[ERROR] 에러 처리 최종 점검**
 
-- [ ] 모든 API 라우트 try/catch + 구조화 로깅
-  - 파일: `lib/logger.ts` (신규, 선택)
-- [ ] Notion API 오류 메시지 → 사용자 친화 메시지 매핑
-- [ ] Sonner 토스트 디자인 일관성 확인
+- [x] 모든 API 라우트 try/catch + 구조화 로깅
+- [x] Notion API 오류 메시지 → 사용자 친화 메시지 매핑
+- [x] Sonner 토스트 디자인 일관성 확인
 
 **[SECURITY] 보안 점검**
 
-- [ ] `shareToken`이 클라이언트 응답에서 노출되지 않는지 네트워크 탭 검증
-- [ ] `/api/invoices`, `/api/share` 미인증 접근 차단 재확인
-- [ ] `ADMIN_PASSWORD_HASH`가 Git에 커밋되지 않았는지 `.gitignore` 확인
-- [ ] CSP 헤더 검토 (Next.js 기본값 + 필요 시 커스텀)
-  - 파일: `next.config.ts`
+- [x] `shareToken`이 클라이언트 응답에서 노출되지 않는지 네트워크 탭 검증
+- [x] `/api/invoices`, `/api/share` 미인증 접근 차단 재확인
+- [x] `ADMIN_PASSWORD_HASH`가 Git에 커밋되지 않았는지 `.gitignore` 확인
+- [x] CSP 헤더 검토 (Next.js 기본값 + 필요 시 커스텀)
 
 **[DEPLOY] Vercel 배포**
 
-- [ ] Vercel 프로젝트 생성 및 Git 연결
-- [ ] Vercel 환경변수 등록 (`NOTION_API_KEY`, `AUTH_SECRET`, `ADMIN_EMAIL`, `ADMIN_PASSWORD_HASH`, `NEXTAUTH_URL` 등)
-- [ ] 프리뷰 배포 → 스모크 테스트
-- [ ] 커스텀 도메인 연결 (선택)
-- [ ] 프로덕션 배포
-- [ ] `allowedDevOrigins` 프로덕션 설정 확인 (`next.config.ts`)
+- [x] Vercel 프로젝트 생성 및 Git 연결 (`https://github.com/it0951/invoice-web`)
+- [x] Vercel 환경변수 등록 (`NOTION_API_KEY`, `AUTH_SECRET`, `ADMIN_EMAIL`, `ADMIN_PASSWORD_HASH`, `NEXTAUTH_URL` 등)
+- [x] 프리뷰 배포 → 스모크 테스트
+- [ ] 커스텀 도메인 연결 (선택 — MVP 이후 고려)
+- [x] 프로덕션 배포 완료 (2026-04-24)
+- [x] `allowedDevOrigins` 프로덕션 설정 확인 (`next.config.ts`)
 
 **[DOCS] 문서 마감**
 
-- [ ] `README.md`에 로컬 실행 방법, 환경변수 설명 추가
-- [ ] `docs/deployment.md`에 Vercel 배포 가이드 기록
-- [ ] `docs/admin-guide.md`에 관리자 사용법 기록 (비밀번호 해시 생성법 포함)
+- [x] `README.md`에 로컬 실행 방법, 환경변수 설명 추가
+- [x] `docs/deployment.md`에 Vercel 배포 가이드 기록
+- [x] `docs/admin-guide.md`에 관리자 사용법 기록 (비밀번호 해시 생성법 포함)
 
 **테스트**
 
-- [ ] **[TEST]** 프로덕션 스모크 테스트 Playwright MCP
+- [x] **[TEST]** 프로덕션 스모크 테스트 완료 (2026-04-24) ✅
   - 시나리오: 프로덕션 URL로 로그인 → 대시보드 → 공유 생성 → 시크릿 창에서 공유 URL 열람 → PDF 다운로드 → 한글 확인
-  - 도구: `mcp__playwright__browser_navigate`, `mcp__playwright__browser_snapshot`
 
 **완료 기준**:
 - QA 체크리스트 전 항목 통과

@@ -105,12 +105,14 @@ node -e "const bcrypt = require('bcrypt'); bcrypt.hash('YOUR_PASSWORD', 12).then
 
 ## 배포 확인 체크리스트
 
-- [ ] 모든 환경변수가 Vercel에 등록되었는지 확인
-- [ ] `/login` 페이지에서 관리자 로그인 성공 확인
-- [ ] `/dashboard` 에서 견적서 목록이 정상 조회되는지 확인
-- [ ] 공유 링크 발급 후 `/invoice/[token]` 접근 확인
-- [ ] PDF 다운로드 정상 작동 확인
-- [ ] `NEXTAUTH_URL`이 실제 배포 도메인과 일치하는지 확인
+- [x] 모든 환경변수가 Vercel에 등록되었는지 확인
+- [x] `/login` 페이지에서 관리자 로그인 성공 확인
+- [x] `/dashboard` 에서 견적서 목록이 정상 조회되는지 확인
+- [x] 공유 링크 발급 후 `/invoice/[token]` 접근 확인
+- [x] PDF 다운로드 정상 작동 확인
+- [x] `NEXTAUTH_URL`이 실제 배포 도메인과 일치하는지 확인
+
+> **배포 완료**: 2026-04-24 프로덕션 배포 및 전체 테스트 통과.
 
 ---
 
