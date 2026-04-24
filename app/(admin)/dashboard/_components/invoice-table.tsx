@@ -191,15 +191,41 @@ export function InvoiceTable() {
   } = useQuery<Invoice[]>({
     queryKey: ["invoices"],
     queryFn: async () => {
-      const res = await fetch("/api/invoices");
+      const res = await fetch("/api/invoices", { cache: "no-store" });
       if (!res.ok) throw new Error("목록 조회 실패");
       return res.json() as Promise<Invoice[]>;
     },
   });
 
-  /** 쿼리 무효화로 목록 재조회 */
-  function handleSuccess() {
-    queryClient.invalidateQueries({ queryKey: ["invoices"] });
+  /** 공유 링크 생성 성공: 낙관적 업데이트로 즉시 UI 반영 */
+  function handleShareSuccess(token: string, expiresAt: string) {
+    queryClient.setQueryData<Invoice[]>(
+      ["invoices"],
+      (old) =>
+        old?.map((inv) =>
+          inv.id === shareDialogInvoice?.id
+            ? {
+                ...inv,
+                shareToken: token,
+                tokenExpiresAt: expiresAt,
+                tokenRevokedAt: null,
+              }
+            : inv,
+        ) ?? [],
+    );
+  }
+
+  /** 공유 링크 회수 성공: 낙관적 업데이트로 즉시 UI 반영 */
+  function handleRevokeSuccess() {
+    queryClient.setQueryData<Invoice[]>(
+      ["invoices"],
+      (old) =>
+        old?.map((inv) =>
+          inv.id === revokeDialogInvoice?.id
+            ? { ...inv, tokenRevokedAt: new Date().toISOString() }
+            : inv,
+        ) ?? [],
+    );
   }
 
   // 로딩 상태
@@ -373,7 +399,7 @@ export function InvoiceTable() {
           onOpenChange={(open) => {
             if (!open) setShareDialogInvoice(null);
           }}
-          onSuccess={handleSuccess}
+          onSuccess={handleShareSuccess}
         />
       )}
 
@@ -385,7 +411,7 @@ export function InvoiceTable() {
           onOpenChange={(open) => {
             if (!open) setRevokeDialogInvoice(null);
           }}
-          onSuccess={handleSuccess}
+          onSuccess={handleRevokeSuccess}
         />
       )}
     </>

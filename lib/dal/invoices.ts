@@ -203,7 +203,6 @@ export async function createShareToken(
     }),
   );
 
-  // Next.js 16: revalidateTag는 두 번째 인수(profile)가 필수
   revalidateTag("invoices:list", "max");
   return { token, expiresAt };
 }
@@ -224,7 +223,6 @@ export async function revokeShareToken(invoiceId: string): Promise<void> {
     }),
   );
 
-  // Next.js 16: revalidateTag는 두 번째 인수(profile)가 필수
   revalidateTag("invoices:list", "max");
 }
 

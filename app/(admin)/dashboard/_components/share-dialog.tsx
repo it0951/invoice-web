@@ -33,8 +33,8 @@ interface ShareDialogProps {
   invoice: Invoice;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  /** 공유 링크 생성 성공 후 목록 갱신을 위한 콜백 */
-  onSuccess: () => void;
+  /** 공유 링크 생성 성공 후 목록 갱신을 위한 콜백 (token, expiresAt 전달) */
+  onSuccess: (token: string, expiresAt: string) => void;
 }
 
 /** 만료일 선택 옵션 */
@@ -91,7 +91,7 @@ export function ShareDialog({
 
       const data: ShareApiResponse = await res.json();
       setGeneratedUrl(data.url);
-      onSuccess();
+      onSuccess(data.token, data.expiresAt);
     } catch {
       toast.error("공유 링크 생성에 실패했습니다");
     } finally {

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 /**
  * @fileoverview Radix UI Dialog 래퍼 컴포넌트 모음.
@@ -18,12 +18,12 @@
  * - DialogClose: 다이얼로그를 닫는 요소
  */
 
-import * as React from "react"
-import { Dialog as DialogPrimitive } from "radix-ui"
+import * as React from "react";
+import { Dialog as DialogPrimitive } from "radix-ui";
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { XIcon } from "lucide-react"
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { XIcon } from "lucide-react";
 
 /**
  * 다이얼로그 루트.
@@ -49,28 +49,28 @@ import { XIcon } from "lucide-react"
 function Dialog({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Root>) {
-  return <DialogPrimitive.Root data-slot="dialog" {...props} />
+  return <DialogPrimitive.Root data-slot="dialog" {...props} />;
 }
 
 /** 다이얼로그를 여는 트리거 요소 */
 function DialogTrigger({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Trigger>) {
-  return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />
+  return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />;
 }
 
 /** 다이얼로그 Portal — DOM 트리 최상단에 렌더링하여 z-index 문제를 방지합니다. */
 function DialogPortal({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Portal>) {
-  return <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />
+  return <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />;
 }
 
 /** 다이얼로그를 닫는 요소 — asChild로 커스텀 버튼에 닫기 기능을 부여할 수 있습니다. */
 function DialogClose({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Close>) {
-  return <DialogPrimitive.Close data-slot="dialog-close" {...props} />
+  return <DialogPrimitive.Close data-slot="dialog-close" {...props} />;
 }
 
 /** 다이얼로그 배경 오버레이 — 클릭 시 다이얼로그가 닫힙니다. */
@@ -83,11 +83,11 @@ function DialogOverlay({
       data-slot="dialog-overlay"
       className={cn(
         "fixed inset-0 isolate z-50 bg-black/10 duration-100 supports-backdrop-filter:backdrop-blur-xs data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
-        className
+        className,
       )}
       {...props}
     />
-  )
+  );
 }
 
 /**
@@ -104,7 +104,7 @@ function DialogContent({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
   /** 우측 상단 X 닫기 버튼 표시 여부 (기본값: true) */
-  showCloseButton?: boolean
+  showCloseButton?: boolean;
 }) {
   return (
     <DialogPortal>
@@ -113,7 +113,7 @@ function DialogContent({
         data-slot="dialog-content"
         className={cn(
           "fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-xl bg-popover p-4 text-sm text-popover-foreground ring-1 ring-foreground/10 duration-100 outline-none sm:max-w-sm data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
-          className
+          className,
         )}
         {...props}
       >
@@ -125,15 +125,14 @@ function DialogContent({
               className="absolute top-2 right-2"
               size="icon-sm"
             >
-              <XIcon
-              />
+              <XIcon />
               <span className="sr-only">Close</span>
             </Button>
           </DialogPrimitive.Close>
         )}
       </DialogPrimitive.Content>
     </DialogPortal>
-  )
+  );
 }
 
 /** 다이얼로그 상단 헤더 — 제목과 설명을 수직 배치합니다. */
@@ -144,7 +143,7 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
       className={cn("flex flex-col gap-2", className)}
       {...props}
     />
-  )
+  );
 }
 
 /**
@@ -159,14 +158,14 @@ function DialogFooter({
   ...props
 }: React.ComponentProps<"div"> & {
   /** "Close" 텍스트 버튼을 하단에 자동 추가할지 여부 (기본값: false) */
-  showCloseButton?: boolean
+  showCloseButton?: boolean;
 }) {
   return (
     <div
       data-slot="dialog-footer"
       className={cn(
         "-mx-4 -mb-4 flex flex-col-reverse gap-2 rounded-b-xl border-t bg-muted/50 p-4 sm:flex-row sm:justify-end",
-        className
+        className,
       )}
       {...props}
     >
@@ -177,7 +176,7 @@ function DialogFooter({
         </DialogPrimitive.Close>
       )}
     </div>
-  )
+  );
 }
 
 /** 다이얼로그 제목 — 스크린 리더에 다이얼로그 이름으로 전달됩니다. */
@@ -190,11 +189,11 @@ function DialogTitle({
       data-slot="dialog-title"
       className={cn(
         "font-heading text-base leading-none font-medium",
-        className
+        className,
       )}
       {...props}
     />
-  )
+  );
 }
 
 /** 다이얼로그 설명 — 스크린 리더에 다이얼로그 설명으로 전달됩니다. */
@@ -207,11 +206,11 @@ function DialogDescription({
       data-slot="dialog-description"
       className={cn(
         "text-sm text-muted-foreground *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground",
-        className
+        className,
       )}
       {...props}
     />
-  )
+  );
 }
 
 export {
@@ -225,4 +224,4 @@ export {
   DialogPortal,
   DialogTitle,
   DialogTrigger,
-}
+};
