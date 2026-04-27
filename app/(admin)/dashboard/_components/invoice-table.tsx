@@ -13,11 +13,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { AlertCircle, ExternalLink } from "lucide-react";
+import { AlertCircle, Eye } from "lucide-react";
+import Link from "next/link";
 import type { Invoice, InvoiceStatus } from "@/types/invoice";
 import { InvoiceTableSkeleton } from "./invoice-table-skeleton";
 import { ShareDialog } from "./share-dialog";
 import { RevokeDialog } from "./revoke-dialog";
+import { CopyLinkButton } from "./copy-link-button";
 
 /**
  * 공유 상태를 판별해 Badge의 variant와 라벨을 반환하는 헬퍼
@@ -117,41 +119,29 @@ function InvoiceCard({
       </div>
 
       <div className="pt-1 space-y-2">
-        {/* 상세보기 버튼 */}
-        {active ? (
-          <Button variant="outline" size="sm" className="w-full" asChild>
-            <a
-              href={`/invoice/${invoice.shareToken!}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <ExternalLink className="mr-2 h-4 w-4" />
-              상세보기
-            </a>
-          </Button>
-        ) : (
-          <Button
-            variant="outline"
-            size="sm"
-            className="w-full"
-            disabled
-            title="공유 링크 생성 후 상세보기 가능"
-          >
-            <ExternalLink className="mr-2 h-4 w-4" />
+        {/* 상세보기 버튼 — 관리자 상세 페이지로 이동 */}
+        <Button variant="outline" size="sm" className="w-full" asChild>
+          <Link href={`/dashboard/invoices/${invoice.id}`}>
+            <Eye className="mr-2 h-4 w-4" />
             상세보기
-          </Button>
-        )}
+          </Link>
+        </Button>
 
-        {/* 기존 공유/회수 버튼 (아래로 이동) */}
+        {/* 공유 중인 경우: 링크 복사 + 회수 버튼 / 아닌 경우: 공유 링크 생성 버튼 */}
         {active ? (
-          <Button
-            variant="outline"
-            size="sm"
-            className="w-full text-destructive border-destructive hover:bg-destructive/10"
-            onClick={() => onRevokeClick(invoice)}
-          >
-            회수
-          </Button>
+          <>
+            {/* 원클릭 링크 복사 버튼 (full-width, 아이콘 + 텍스트) */}
+            <CopyLinkButton token={invoice.shareToken!} className="w-full" />
+            {/* 공유 링크 회수 버튼 */}
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full text-destructive border-destructive hover:bg-destructive/10"
+              onClick={() => onRevokeClick(invoice)}
+            >
+              회수
+            </Button>
+          </>
         ) : (
           <Button
             variant="outline"
@@ -334,45 +324,34 @@ export function InvoiceTable() {
                   {/* 액션 버튼 */}
                   <TableCell>
                     <div className="flex items-center gap-1">
-                      {/* 상세보기 아이콘 버튼 */}
-                      {active ? (
-                        <Button
-                          variant="ghost"
-                          size="icon-sm"
-                          asChild
-                          title="새 탭에서 상세보기"
-                        >
-                          <a
-                            href={`/invoice/${invoice.shareToken!}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <ExternalLink className="h-4 w-4" />
-                            <span className="sr-only">상세보기</span>
-                          </a>
-                        </Button>
-                      ) : (
-                        <Button
-                          variant="ghost"
-                          size="icon-sm"
-                          disabled
-                          title="공유 링크 생성 후 상세보기 가능"
-                        >
-                          <ExternalLink className="h-4 w-4" />
-                          <span className="sr-only">상세보기 불가</span>
-                        </Button>
-                      )}
+                      {/* 상세보기 아이콘 버튼 — 관리자 상세 페이지로 이동 */}
+                      <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        asChild
+                        title="상세보기"
+                      >
+                        <Link href={`/dashboard/invoices/${invoice.id}`}>
+                          <Eye className="h-4 w-4" />
+                          <span className="sr-only">상세보기</span>
+                        </Link>
+                      </Button>
 
-                      {/* 기존 공유/회수 버튼 */}
+                      {/* 공유 중인 경우: 링크 복사 버튼 → 회수 버튼 / 아닌 경우: 공유 링크 생성 버튼 */}
                       {active ? (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="text-destructive border-destructive hover:bg-destructive/10"
-                          onClick={() => setRevokeDialogInvoice(invoice)}
-                        >
-                          회수
-                        </Button>
+                        <>
+                          {/* 원클릭 링크 복사 버튼 */}
+                          <CopyLinkButton token={invoice.shareToken!} />
+                          {/* 공유 링크 회수 버튼 */}
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="text-destructive border-destructive hover:bg-destructive/10"
+                            onClick={() => setRevokeDialogInvoice(invoice)}
+                          >
+                            회수
+                          </Button>
+                        </>
                       ) : (
                         <Button
                           variant="outline"

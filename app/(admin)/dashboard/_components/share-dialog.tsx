@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import type { Invoice } from "@/types/invoice";
+import { copyToClipboard } from "@/lib/share/clipboard";
 
 /** 공유 링크 생성 API 응답 타입 */
 interface ShareApiResponse {
@@ -102,11 +103,11 @@ export function ShareDialog({
   /** 클립보드에 URL 복사 */
   async function handleCopy() {
     if (!generatedUrl) return;
-    try {
-      await navigator.clipboard.writeText(generatedUrl);
-      toast.success("링크가 복사되었습니다");
-    } catch {
-      toast.error("복사에 실패했습니다");
+    const success = await copyToClipboard(generatedUrl);
+    if (success) {
+      toast.success("공유 링크가 복사되었습니다");
+    } else {
+      toast.error("복사에 실패했습니다. 다시 시도해주세요.");
     }
   }
 

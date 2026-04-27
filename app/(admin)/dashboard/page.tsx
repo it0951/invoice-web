@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { InvoiceTable } from "./_components/invoice-table";
+import { StatsCards } from "./_components/stats-cards";
 
 export const metadata: Metadata = {
   title: "대시보드 | Invoice",
@@ -20,11 +21,16 @@ export default function DashboardPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
       <header className="mb-8">
-        <h1 className="text-2xl font-semibold tracking-tight">대시보드</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">견적서 목록</h1>
         <p className="mt-1 text-sm text-muted-foreground">
           견적서 목록을 확인하고 공유 링크를 관리하세요.
         </p>
       </header>
+
+      {/* 통계 카드 — TanStack Query로 /api/stats 호출 */}
+      <section aria-label="통계 카드" className="mb-8">
+        <StatsCards />
+      </section>
 
       {/* 견적서 목록 테이블 — TanStack Query로 /api/invoices 호출 */}
       <section aria-label="견적서 목록">
