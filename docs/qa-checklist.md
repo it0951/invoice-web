@@ -109,7 +109,7 @@
 
 ---
 
-## 종합 결과
+## 종합 결과 (Sprint 0~5)
 
 | 구분 | 자동화 테스트 | 수동 확인 필요 |
 |-----|------------|-------------|
@@ -122,3 +122,73 @@
 | 관리자 플로우 | - | 6개 항목 |
 | 고객 플로우 | - | 6개 항목 |
 | 문서화 | 4/4 ✅ | - |
+
+---
+
+## Sprint 6: 관리자 전용 레이아웃 E2E 테스트
+
+> 테스트 일자: 2026-04-27
+> 테스트 환경: localhost:3000 (Playwright MCP)
+
+| 시나리오 | 성공 기준 | 결과 | 상태 |
+|---------|---------|------|------|
+| 대시보드 Sidebar 렌더링 | `/dashboard` 접속 시 `aside` Sidebar 표시, 공개 Navbar/Footer DOM 미존재 | Sidebar 있음, Navbar/Footer 없음 확인 | ✅ |
+| 메뉴 활성화(aria-current) | `/dashboard`에서 "대시보드" 메뉴에 `aria-current="page"` | `aria-current="page"` 확인 | ✅ |
+| 로그아웃 | Sidebar 하단 로그아웃 클릭 → `/login` 이동 | `/login` 리다이렉트 확인 | ✅ |
+| 모바일 Sidebar 숨김 | 375×667 뷰포트에서 `aside` 미표시, 햄버거 버튼 표시 | 햄버거 버튼 표시 확인 | ✅ |
+| 모바일 Sheet 오픈 | 햄버거 클릭 → `dialog` Sheet 오픈 → 메뉴 전체 렌더 | Sheet 오픈 및 메뉴 확인 | ✅ |
+| 모바일 Sheet 자동 닫힘 | Sheet 내 메뉴 클릭 → Sheet 닫힘 | `dialog` DOM 미존재 확인 | ✅ |
+| 공개 페이지 레이아웃 분리 | `/login` 접속 시 Navbar/Footer 있음, Sidebar 없음 | Navbar/Footer 있음, Sidebar 없음 확인 | ✅ |
+| 다크모드 전환 | Sidebar 테마 토글 클릭 → `html.dark` 클래스 추가, `localStorage.theme=dark` | `html.dark` 클래스 및 localStorage 확인 | ✅ |
+
+---
+
+## Sprint 7: 원클릭 공유 링크 복사 E2E 테스트
+
+> 테스트 일자: 2026-04-27
+> 테스트 환경: localhost:3000 (Playwright MCP)
+
+| 시나리오 | 성공 기준 | 결과 | 상태 |
+|---------|---------|------|------|
+| 링크 복사 정상 플로우 | 복사 버튼 클릭 → 클립보드에 `/invoice/[token]` 패턴 URL 복사 | `http://localhost:3000/invoice/[uuid]` 확인 | ✅ |
+| aria-label 상태 전환 | 클릭 후 `aria-label="복사 완료"` → 2초 후 `aria-label="공유 링크 복사"` 복귀 | 전환 및 복귀 확인 | ✅ |
+| aria-live 스크린 리더 알림 | 복사 성공 시 `aria-live="polite"` 영역에 메시지 노출 | CopyLinkButton 내 `<span aria-live="polite">` 구현 | ✅ |
+| 포커스 유지 | 2초 후 아이콘 복귀 시 버튼에 포커스 유지 | `buttonRef.current?.focus()` 구현 | ✅ |
+| clipboard 실패 fallback | clipboard/execCommand 모두 실패 시 에러 토스트 | "복사에 실패했습니다" 토스트 확인 | ✅ |
+
+---
+
+## Sprint 8: 관리자 견적서 상세 페이지 E2E 테스트
+
+> 테스트 일자: 2026-04-27
+> 테스트 환경: localhost:3000 (Playwright MCP)
+
+| 시나리오 | 성공 기준 | 결과 | 상태 |
+|---------|---------|------|------|
+| 상세 페이지 렌더링 | 목록에서 상세 링크 클릭 → 브레드크럼·고객명·공유 패널·견적 항목 렌더 | 모든 섹션 렌더 확인 | ✅ |
+| 중첩 경로 Sidebar 활성화 | `/dashboard/invoices/[id]`에서 "견적서 목록" `aria-current="page"` | `aria-current="page"` 확인 | ✅ |
+| 미인증 접근 차단 | 로그아웃 상태에서 `/dashboard/invoices/[id]` → `/login?callbackUrl=...` 리다이렉트 | 리다이렉트 확인 | ✅ |
+
+---
+
+## Sprint 9: 통계 위젯 E2E 테스트
+
+> 테스트 일자: 2026-04-27
+> 테스트 환경: localhost:3000 (Playwright MCP)
+
+| 시나리오 | 성공 기준 | 결과 | 상태 |
+|---------|---------|------|------|
+| 통계 카드 렌더링 | 대시보드 상단 `[aria-label="통계 카드"]` 영역 존재 | 통계 카드 영역 확인 | ✅ |
+| 통계 API 인증 상태 | 로그인 상태에서 `/api/stats` → 200 + 데이터 반환 | `{total, activeShares, totalViews, expiredShares}` 확인 | ✅ |
+| 통계 API 미인증 차단 | `credentials: omit`으로 `/api/stats` 접근 → 401 | 401 반환 확인 | ✅ |
+
+---
+
+## 종합 결과 (Sprint 6~9)
+
+| 구분 | E2E 테스트 | 상태 |
+|-----|-----------|------|
+| Sprint 6: 관리자 레이아웃 | 8/8 | ✅ |
+| Sprint 7: 원클릭 복사 | 5/5 | ✅ |
+| Sprint 8: 상세 페이지 | 3/3 | ✅ |
+| Sprint 9: 통계 위젯 | 3/3 | ✅ |
